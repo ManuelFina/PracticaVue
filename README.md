@@ -100,7 +100,3 @@ Ideal para proyectos educativos y demostraciones
 👤 Autor
 
 Manu Fina – Tecnicatura Superior en Desarrollo de Software
-
-🧑‍💻 Repositorio: https://github.com/TU-USUARIO/convertidor-divisas
-
-🌐 Demo: https://convertidor-divisas-vue.netlify.app/
