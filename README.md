@@ -1,93 +1,106 @@
-# Convertidor de Divisas
+🚀 Convertidor de Divisas
 
-Trabajo Práctico - Aplicaciones Web con Vue.js
+Trabajo Práctico – Aplicaciones Web (Vue.js)
 
-## Demo en Vivo
+Aplicación web simple y rápida para convertir monedas en tiempo real, desarrollada con Vue.js 3 y consumiendo la API pública de ExchangeRate-API.
 
-**Aplicación desplegada:** [https://convertidor-divisas-vue.netlify.app/]
+🌎 Demo Online
 
-## Descripción
+🔗 https://convertidor-divisas-vue.netlify.app/
 
-Aplicación web para convertir monedas en tiempo real utilizando Vue.js 3 y la API de ExchangeRate-API.
+🧩 Descripción
 
-### Funcionalidades
+Este proyecto permite convertir entre distintas monedas de manera inmediata, mostrar la tasa utilizada y mantener la interfaz siempre actualizada.
+Fue construido como ejercicio práctico para reforzar conceptos de Vue.js, consumo de APIs y despliegue web.
 
-- ✅ Conversión de múltiples divisas (USD, EUR, ARS, GBP, BRL, MXN, CLP, JPY)
-- ✅ Tasas de cambio en tiempo real mediante API REST
-- ✅ Intercambio rápido de monedas con botón swap
-- ✅ Conversión automática al cambiar valores
-- ✅ Interfaz responsive (adaptable a móviles)
-- ✅ Diseño moderno con animaciones suaves
-- ✅ Marca de tiempo de última actualización
+✨ Características Principales
 
-## Tecnologías Utilizadas
+Conversión entre USD, EUR, ARS, GBP, BRL, MXN, CLP, JPY
 
-- **Vue.js 3** - Framework progresivo de JavaScript
-- **Vite** - Herramienta de construcción y desarrollo
-- **ExchangeRate-API** - API REST para obtener tasas de cambio
-- **CSS3** - Estilos y animaciones
-- **Netlify** - Despliegue y hosting
+Consulta en tiempo real a una API REST de tasas de cambio
 
-### Pasos
+Botón para intercambiar monedas (swap)
 
-1. Clonar el repositorio:
+Conversión automática al modificar datos
 
-```bash
+Diseño responsive y limpio
+
+Animaciones suaves para resultados y mensajes
+
+Muestra fecha y hora de la última actualización
+
+Construido con Vite para un desarrollo rápido
+
+🛠 Tecnologías Utilizadas
+Tecnología	Uso
+Vue.js 3	Framework principal
+Vite	Entorno de desarrollo y build
+ExchangeRate-API	Tasas de cambio
+CSS3	Estilo y animaciones
+Netlify	Hosting del proyecto
+📦 Instalación y Uso
+1️⃣ Clonar el repositorio
 git clone https://github.com/TU-USUARIO/convertidor-divisas.git
 cd convertidor-divisas
-```
 
-2. Instalar dependencias:
-
-```bash
+2️⃣ Instalar dependencias
 npm install
-```
 
-3. Ejecutar en modo desarrollo:
-
-```bash
+3️⃣ Ejecutar en modo desarrollo
 npm run dev
-```
 
-4. Abrir en el navegador: `http://localhost:5173`
 
-## Compilar para Producción
+Abrir en el navegador:
+👉 http://localhost:5173
 
-```bash
+4️⃣ Compilar para producción
 npm run build
-```
 
-Los archivos optimizados se generarán en la carpeta `dist/`
 
-## Estructura del Proyecto
+Los archivos finales se generan en la carpeta dist/.
 
-```
+📁 Estructura del Proyecto
 convertidor-divisas/
 ├── src/
 │   ├── assets/          # Imágenes y recursos
 │   ├── App.vue          # Componente principal
-│   └── main.js          # Punto de entrada
+│   └── main.js          # Archivo de entrada
 ├── public/              # Archivos estáticos
-├── dist/                # Build de producción (generado)
-├── package.json         # Dependencias del proyecto
-└── README.md           # Este archivo
-```
+├── dist/                # Build final (generado)
+├── package.json         # Dependencias y scripts
+└── README.md            # Este archivo
 
-## Conceptos de Vue.js Implementados
+🧠 Conceptos de Vue.js Aplicados
 
-## API Utilizada
+Data binding (v-model)
 
-**ExchangeRate-API**
+Eventos (click, change, keyup)
 
-- Endpoint: `https://api.exchangerate-api.com/v4/latest/{currency}`
-- Proporciona tasas de cambio actualizadas
-- No requiere autenticación
-- Gratuita para uso educativo
+Condicionales y transiciones
 
-## Autor
+Fetch API para consumir servicios externos
 
-Leonardo Renzi
-Tecnicatura Superior en Desarrollo de Software
+Componentes básicos
 
-**Repositorio:** https://github.com/TU-USUARIO/convertidor-divisas
-**Demo:** https://convertidor-divisas-vue.netlify.app/
+Ciclo de vida (mounted)
+
+🌐 API Utilizada: ExchangeRate-API
+
+Endpoint:
+
+https://api.exchangerate-api.com/v4/latest/{monedaBase}
+
+
+No requiere autenticación
+
+Devuelve un objeto con tasas actualizadas
+
+Ideal para proyectos educativos y demostraciones
+
+👤 Autor
+
+Manu Fina – Tecnicatura Superior en Desarrollo de Software
+
+🧑‍💻 Repositorio: https://github.com/TU-USUARIO/convertidor-divisas
+
+🌐 Demo: https://convertidor-divisas-vue.netlify.app/
