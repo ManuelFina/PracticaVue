@@ -12,92 +12,109 @@
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
-      <div class="converter-box">
-        <h2 class="box-title">Convertir Moneda</h2>
+      <div class="converter-layout">
 
-        <!-- Monto a convertir -->
-        <div class="input-group">
-          <label>Cantidad:</label>
-          <input
-            v-model.number="amount"
-            type="number"
-            placeholder="Ingresa la cantidad"
-            min="0"
-            @keyup.enter="convertCurrency"
-          />
-        </div>
+        <!-- IZQUIERDA: Formularios -->
+        <section class="left-panel">
+          <div class="converter-box">
+            <h2 class="box-title">Convertir moneda</h2>
 
-        <!-- Moneda origen -->
-        <div class="input-group">
-          <label>De:</label>
-          <select v-model="fromCurrency" @change="convertCurrency">
-            <option value="USD">USD - Dólar Estadounidense</option>
-            <option value="EUR">EUR - Euro</option>
-            <option value="ARS">ARS - Peso Argentino</option>
-            <option value="GBP">GBP - Libra Esterlina</option>
-            <option value="BRL">BRL - Real Brasileño</option>
-            <option value="MXN">MXN - Peso Mexicano</option>
-            <option value="CLP">CLP - Peso Chileno</option>
-            <option value="JPY">JPY - Yen Japonés</option>
-          </select>
-        </div>
+            <!-- Monto -->
+            <div class="input-group">
+              <label>Cantidad</label>
+              <input
+                v-model.number="amount"
+                type="number"
+                placeholder="Ingresa la cantidad"
+                min="0"
+                @keyup.enter="convertCurrency"
+              />
+            </div>
 
-        <!-- Botón de intercambio -->
-        <div class="swap-container">
-          <button @click="swapCurrencies" class="swap-btn" title="Intercambiar monedas">⇅</button>
-        </div>
+            <!-- SELECTS en una fila (o apilados en móvil) -->
+            <div class="row">
+              <div class="input-group small">
+                <label>De</label>
+                <select v-model="fromCurrency" @change="convertCurrency">
+                  <option value="USD">USD - Dólar Estadounidense</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="ARS">ARS - Peso Argentino</option>
+                  <option value="GBP">GBP - Libra Esterlina</option>
+                  <option value="BRL">BRL - Real Brasileño</option>
+                  <option value="MXN">MXN - Peso Mexicano</option>
+                  <option value="CLP">CLP - Peso Chileno</option>
+                  <option value="JPY">JPY - Yen Japonés</option>
+                </select>
+              </div>
 
-        <!-- Moneda destino -->
-        <div class="input-group">
-          <label>A:</label>
-          <select v-model="toCurrency" @change="convertCurrency">
-            <option value="USD">USD - Dólar Estadounidense</option>
-            <option value="EUR">EUR - Euro</option>
-            <option value="ARS">ARS - Peso Argentino</option>
-            <option value="GBP">GBP - Libra Esterlina</option>
-            <option value="BRL">BRL - Real Brasileño</option>
-            <option value="MXN">MXN - Peso Mexicano</option>
-            <option value="CLP">CLP - Peso Chileno</option>
-            <option value="JPY">JPY - Yen Japonés</option>
-          </select>
-        </div>
+              <div class="swap-container" aria-hidden="true">
+                <button @click="swapCurrencies" class="swap-btn" title="Intercambiar monedas">⇄</button>
+              </div>
 
-        <!-- Botón convertir -->
-        <button @click="convertCurrency" class="convert-btn" :disabled="loading">
-          <span v-if="!loading">Convertir</span>
-          <span v-else>⏳ Convirtiendo...</span>
-        </button>
+              <div class="input-group small">
+                <label>A</label>
+                <select v-model="toCurrency" @change="convertCurrency">
+                  <option value="USD">USD - Dólar Estadounidense</option>
+                  <option value="EUR">EUR - Euro</option>
+                  <option value="ARS">ARS - Peso Argentino</option>
+                  <option value="GBP">GBP - Libra Esterlina</option>
+                  <option value="BRL">BRL - Real Brasileño</option>
+                  <option value="MXN">MXN - Peso Mexicano</option>
+                  <option value="CLP">CLP - Peso Chileno</option>
+                  <option value="JPY">JPY - Yen Japonés</option>
+                </select>
+              </div>
+            </div>
 
-        <!-- Resultado -->
-        <transition name="fade">
-          <div v-if="result !== null && !error" class="result">
-            <div class="result-icon">💰</div>
-            <p class="result-amount">{{ formatNumber(amount) }} {{ fromCurrency }}</p>
-            <div class="result-equals">=</div>
-            <p class="result-converted">{{ formatNumber(result) }} {{ toCurrency }}</p>
-            <p class="exchange-rate">
-              Tasa: 1 {{ fromCurrency }} = {{ exchangeRate.toFixed(4) }} {{ toCurrency }}
-            </p>
-            <p class="last-update">Última actualización: {{ currentTime }}</p>
+            <!-- Botón convertir -->
+            <button @click="convertCurrency" class="convert-btn" :disabled="loading">
+              <span v-if="!loading">Convertir</span>
+              <span v-else>⏳ Convirtiendo...</span>
+            </button>
+
+            <!-- Mensaje de error (aparece debajo del botón) -->
+            <transition name="fade">
+              <div v-if="error" class="error">⚠️ {{ error }}</div>
+            </transition>
           </div>
-        </transition>
 
-        <!-- Mensaje de error -->
-        <transition name="fade">
-          <div v-if="error" class="error">⚠️ {{ error }}</div>
-        </transition>
-      </div>
+          
+        </section>
 
-      <!-- Información adicional -->
-      <div class="info-box">
-        <p><strong>Tip:</strong> Presiona Enter para convertir rápidamente</p>
-        <p>Las tasas se actualizan automáticamente</p>
+        <!-- DERECHA: Resultado -->
+        <aside class="right-panel">
+          <transition name="fade">
+            <div v-if="result !== null && !error" class="result-card">
+              <div class="result-top">
+                <div class="result-icon"></div>
+                <div class="result-texts">
+                  <p class="result-amount">{{ formatNumber(amount) }} <span class="mono">{{ fromCurrency }}</span></p>
+                  <div class="result-equals">=</div>
+                  <p class="result-converted">{{ formatNumber(result) }} <span class="mono">{{ toCurrency }}</span></p>
+                </div>
+              </div>
+
+              <div class="result-meta">
+                <p class="exchange-rate">Tasa: 1 {{ fromCurrency }} = {{ exchangeRate.toFixed(4) }} {{ toCurrency }}</p>
+                <p class="last-update">Última actualización: {{ currentTime }}</p>
+              </div>
+            </div>
+          </transition>
+
+          <!-- Si aún no hay resultado, mostrar un placeholder tranquilo -->
+          <transition name="fade">
+            <div v-if="result === null && !error" class="placeholder-card">
+              <p class="placeholder-text">Realizá una conversión y verás el resultado aquí.</p>
+            </div>
+          </transition>
+        </aside>
+
       </div>
     </main>
 
     <!-- FOOTER -->
     <footer class="footer">
-      <p>Desarrollado con Vue.js | Tasas proporcionadas por ExchangeRate-API</p>
+      <p>Tasas proporcionadas por ExchangeRate-API</p>
     </footer>
   </div>
 </template>
@@ -194,300 +211,233 @@ export default {
 </script>
 
 <style scoped>
-/* IMPORTAR IMAGEN DE FONDO */
-/* Asegúrate de que la imagen esté en src/assets/ */
+/* Estética tranqui, neutra y ordenada */
+
+/* Root & layout */
 #app {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
-  /* FONDO CON IMAGEN */
-  background-image: url('./assets/fondo1.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-
-  /* Overlay oscuro para mejorar legibilidad */
-  position: relative;
+  background: #fafafa;
+  color: #1f2937;
 }
 
-#app::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 0;
-}
-
-/* NAVBAR */
+/* Navbar */
 .navbar {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-  padding: 20px 0;
+  background: #ffffff;
+  border-bottom: 1px solid #ececec;
+  padding: 16px 0;
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 50;
 }
-
 .nav-container {
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .nav-title {
-  margin: 0;
-  font-size: 1.8em;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
 }
-
 .nav-info {
-  color: #666;
-  font-size: 0.9em;
-  font-weight: 500;
+  color: #6b7280;
+  font-size: 0.9rem;
 }
 
-/* CONTENIDO PRINCIPAL */
+/* Main container */
 .main-content {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  position: relative;
-  z-index: 1;
+  padding: 36px 18px;
 }
 
-.converter-box {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+/* Layout: izquierda (form) / derecha (resultado) */
+.converter-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
   width: 100%;
-  max-width: 500px;
-  margin-bottom: 20px;
+  max-width: 1000px;
 }
 
+/* Para pantallas grandes, dos columnas */
+@media (min-width: 900px) {
+  .converter-layout {
+    grid-template-columns: 1fr 380px;
+    align-items: start;
+  }
+}
+
+.left-panel { display: flex; flex-direction: column; gap: 16px; }
+.right-panel { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+
+/* Form card */
+.converter-box {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+  border: 1px solid #eef2f7;
+}
 .box-title {
-  text-align: center;
-  color: #333;
-  margin-bottom: 30px;
-  font-size: 1.5em;
+  margin: 0 0 14px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.input-group {
-  margin-bottom: 20px;
-}
+/* Inputs */
+.input-group { margin-bottom: 12px; }
+.input-group.small { margin-bottom: 0; }
 
 label {
   display: block;
-  margin-bottom: 8px;
-  color: #333;
+  margin-bottom: 6px;
+  color: #374151;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
-input,
-select {
+input, select {
   width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
   border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.3s;
-  box-sizing: border-box;
-  background: white;
+  background: #ffffff;
+  font-size: 0.95rem;
+  color: #0f172a;
+  transition: all 0.15s ease;
 }
-
-input:focus,
-select:focus {
+input::placeholder { color: #9ca3af; }
+input:focus, select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #7c93ff;
+  box-shadow: 0 0 0 4px rgba(124,147,255,0.08);
 }
 
-/* BOTÓN DE INTERCAMBIO */
-.swap-container {
+/* Row for selects + swap */
+.row {
   display: flex;
-  justify-content: center;
-  margin: 10px 0;
-}
-
-.swap-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 2px solid #667eea;
-  background: white;
-  color: #667eea;
-  font-size: 24px;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
+  gap: 12px;
   align-items: center;
-  justify-content: center;
 }
+.row .small { flex: 1; }
 
-.swap-btn:hover {
-  background: #667eea;
-  color: white;
-  transform: rotate(180deg);
+/* Swap button */
+.swap-container { display:flex; align-items:center; justify-content:center; }
+.swap-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1px solid #c7d2fe;
+  background: #ffffff;
+  color: #374151;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.18s;
 }
+.swap-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(99,102,241,0.08); }
 
-/* BOTÓN CONVERTIR */
+/* Convert button */
 .convert-btn {
   width: 100%;
-  padding: 15px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px;
+  margin-top: 12px;
+  background: linear-gradient(90deg,#4f46e5,#7c93ff);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 18px;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.98rem;
   cursor: pointer;
-  transition: all 0.3s;
-  margin-top: 10px;
+  transition: transform .18s, box-shadow .18s;
 }
+.convert-btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(79,70,229,0.15); }
+.convert-btn:disabled { opacity: 0.7; cursor: not-allowed; }
 
-.convert-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-}
-
-.convert-btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-/* RESULTADO */
-.result {
-  margin-top: 30px;
-  padding: 25px;
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-  border-radius: 15px;
-  text-align: center;
-  border: 2px solid #667eea30;
-}
-
-.result-icon {
-  font-size: 3em;
-  margin-bottom: 10px;
-}
-
-.result-amount,
-.result-converted {
-  font-size: 1.4em;
-  color: #333;
-  margin: 10px 0;
-  font-weight: 600;
-}
-
-.result-equals {
-  font-size: 2em;
-  color: #667eea;
-  margin: 10px 0;
-}
-
-.exchange-rate {
-  color: #666;
-  font-size: 0.95em;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #ddd;
-}
-
-.last-update {
-  color: #999;
-  font-size: 0.85em;
-  margin-top: 8px;
-}
-
-/* ERROR */
-.error {
-  margin-top: 20px;
-  padding: 15px;
-  background: #fee;
-  border: 2px solid #fcc;
-  border-radius: 8px;
-  color: #c33;
-  text-align: center;
-  font-weight: 600;
-}
-
-/* INFO BOX */
+/* Info box */
 .info-box {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  padding: 20px;
-  border-radius: 15px;
-  max-width: 500px;
-  width: 100%;
+  background: #ffffff;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #eef2f7;
+  color: #475569;
+  font-size: 0.95rem;
+}
+
+/* Result card / placeholder */
+.result-card, .placeholder-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(16,24,40,0.04);
+  border: 1px solid #eef2f7;
+}
+.result-top {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.result-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+.result-texts { display:flex; flex-direction:column; gap:6px; }
+.result-amount, .result-converted {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+.result-equals {
+  font-size: 1.4rem;
+  color: #7c93ff;
+  font-weight: 700;
+}
+.result-meta { margin-top: 10px; color: #6b7280; font-size: 0.9rem; }
+
+.placeholder-text {
+  color: #6b7280;
+  text-align: center;
+  padding: 24px 6px;
+}
+
+/* Error */
+.error {
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  border-radius: 8px;
+  font-weight: 600;
   text-align: center;
 }
 
-.info-box p {
-  margin: 8px 0;
-  color: #555;
-  font-size: 0.9em;
-}
-
-/* FOOTER */
+/* Footer */
 .footer {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 20px;
+  background: transparent;
+  padding: 18px;
   text-align: center;
-  color: #666;
-  font-size: 0.9em;
-  position: relative;
-  z-index: 1;
+  color: #6b7280;
+  font-size: 0.9rem;
+  border-top: 1px solid #f1f5f9;
 }
 
-/* ANIMACIONES */
-.fade-enter-active,
-.fade-leave-active {
-  transition:
-    opacity 0.5s,
-    transform 0.5s;
-}
+/* Transitions */
+.fade-enter-active, .fade-leave-active { transition: opacity .35s, transform .35s; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(6px); }
 
-.fade-enter-from {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .nav-container {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .nav-title {
-    font-size: 1.5em;
-  }
-
-  .converter-box {
-    padding: 25px;
-  }
+/* Small screens adjustments */
+@media (max-width: 420px) {
+  .nav-title { font-size: 1.05rem; }
+  .box-title { font-size: 1.05rem; }
+  .swap-btn { width:40px; height:40px; }
 }
 </style>
